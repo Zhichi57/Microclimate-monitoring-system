@@ -1,0 +1,30 @@
+<div class="modal fade" id="addSensorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Добавить датчик</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3">
+                    <div class="col-12">
+                        <label for="inputSensorApi" class="form-label">Ключ API</label>
+                        <input type="text" class="form-control" id="inputSensorApi">
+                    </div>
+                    <div class="col-12">
+                        <label for="inputState" class="form-label">Расположение</label>
+                        <select id="inputState" class="form-select">
+                            <option selected>Выберите...</option>
+                            <option>...</option>
+                        </select>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
