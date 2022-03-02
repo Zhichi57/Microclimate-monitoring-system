@@ -27,9 +27,9 @@ class IndicationLimits(models.Model):
 
 class Manual(models.Model):
     id = models.AutoField(primary_key=True)
-    PeriodOfTheYear_id = models.OneToOneField(PeriodOfTheYear, on_delete=models.CASCADE)
-    CategoryOfWorks_id = models.OneToOneField(CategoryOfWorks, on_delete=models.CASCADE)
-    IndicationLimits_id = models.OneToOneField(IndicationLimits, on_delete=models.CASCADE)
+    PeriodOfTheYear_id = models.ForeignKey(PeriodOfTheYear, on_delete=models.CASCADE)
+    CategoryOfWorks_id = models.ForeignKey(CategoryOfWorks, on_delete=models.CASCADE)
+    IndicationLimits_id = models.ForeignKey(IndicationLimits, on_delete=models.CASCADE)
 
 
 class UserManual(models.Model):
