@@ -1,0 +1,56 @@
+<div class="modal fade" id="modal" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Оптимальные показатели</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Период года</th>
+                        <th>Категория работ</th>
+                        <th>Температура воздуха</th>
+                        <th>Относительная влажность</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for mn in manual %}
+                        <tr>
+                            <th scope="row">{{ mn.id }}</th>
+                            <td>{{ mn.PeriodOfTheYear_id.name }}</td>
+                            <td>{{ mn.CategoryOfWorks_id.name }}</td>
+                            <td>{{ mn.IndicationLimits_id.LowerTemperatureLimit }}-{{ mn.IndicationLimits_id.UpperTemperatureLimit }}</td>
+                            <td>{{ mn.IndicationLimits_id.LowerHumidityLimit }}-{{ mn.IndicationLimits_id.UpperHumidityLimit }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <form>
+                    <div class="form-group">
+                        <label for="select_manual">Выберите показатели</label>
+                        <select id="select_manual" class="form-control form-control-sm">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <button style="margin-top: 10px;" id="save_manual_button" type="submit" class="btn btn-primary"
+                            data-bs-dismiss="modal">
+                        Сохранить
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -6,7 +6,8 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.templatetags.static import static
 from django.contrib.auth.decorators import login_required
-from .models import Map
+
+from .models import Map, Manual, UserManual
 
 import uuid
 
@@ -35,7 +36,9 @@ def index(request):
         user_id=request.user.id,
         defaults={'map_data': json.dumps(data)},
     )
-    return render(request, 'index.html', {"foo": "bar"})
+
+    manual = Manual.objects.all()
+    return render(request, 'index.html', {"manual": manual})
 
 
 def set_image(request):
@@ -58,9 +61,9 @@ def get_map_data(request):
     get_map = Map.objects.get(user=user)
     data = json.loads(get_map.map_data)
     list_zones = data['floors'][0]['zones']
-    for zone in list_zones:
-        if zone['name'] == 'test1':
-            zone['name'] = '19.0'
+    # for zone in list_zones:
+    #    if zone['name'] == 'test1':
+    #        zone['name'] = '19.0'
     return JsonResponse(data=data)
 
 
@@ -70,4 +73,13 @@ def set_map_data(request):
     set_map = Map.objects.get(user=user)
     set_map.map_data = json.dumps(data)
     set_map.save()
+    return HttpResponse(status=200)
+
+
+def set_manual(request):
+    manual_id = int(request.POST.get('manual_id'))
+    obj, created = UserManual.objects.update_or_create(
+        user_id=request.user.id,
+        defaults={'Manual_id_id': manual_id},
+    )
     return HttpResponse(status=200)
