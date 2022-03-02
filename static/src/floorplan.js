@@ -140,15 +140,7 @@ d3.floorplan = function () {
         // Context menu
         var menu = [
             {
-                title: 'Change zone name',
-                action: function (elm, d, i) {
-                    console.log('Change zone name');
-                    zone.name = prompt("Please enter new name name", "Zone name");
-                    d3.select("." + this.classList.item(1) + '-text').text(zone.name);
-                }
-            },
-            {
-                title: 'Delete zone',
+                title: 'Удалить зону',
                 action: function (elm, d, i) {
                     console.log('You have deleted - ' + this.classList.item(1));
                     d3.select("." + this.classList.item(1)).remove();
@@ -296,15 +288,15 @@ d3.floorplan = function () {
         // Context menu
         var menu = [
             {
-                title: 'Change zone name',
+                title: 'Выбрать датчик',
                 action: function (elm, d, i) {
                     console.log('Change zone name');
-                    zone.name = prompt("Please enter new name name", "Zone name");
+                    zone.name = prompt("Введите имя датчика", "");
                     d3.select("." + this.classList.item(1) + '-text').text(zone.name);
                 }
             },
             {
-                title: 'Delete zone',
+                title: 'Удалить зону',
                 action: function (elm, d, i) {
                     console.log('You have deleted - ' + this.classList.item(1));
                     console.log('2');
