@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from django.templatetags.static import static
 from django.contrib.auth.decorators import login_required
 
-from .models import Map, Manual, UserManual
+from .models import Map, Manual, UserManual, Sensor
 
 import uuid
 
@@ -37,8 +37,10 @@ def index(request):
         defaults={'map_data': json.dumps(data)},
     )
 
+    user = User.objects.get(pk=request.user.id)
     manual = Manual.objects.all()
-    return render(request, 'index.html', {"manual": manual})
+    sensors = Sensor.objects.filter(User=user)
+    return render(request, 'index.html', {"manual": manual, 'sensors': sensors})
 
 
 def set_image(request):
@@ -82,4 +84,34 @@ def set_manual(request):
         user_id=request.user.id,
         defaults={'Manual_id_id': manual_id},
     )
+    return HttpResponse(status=200)
+
+
+def add_sensor(request):
+    user = User.objects.get(pk=request.user.id)
+    api_key = request.POST.get('api_key')
+    sensor_name = request.POST.get('sensor_name')
+    sensor_description = request.POST.get('sensor_description')
+    new_sensor = Sensor(Api_key=api_key, Name=sensor_name, Description=sensor_description, User=user)
+    new_sensor.save()
+    return render(request, 'new_row_sensor.html', {"sensor": new_sensor})
+
+
+def edit_sensor(request):
+    sensor_id = request.POST.get('sensor_id')
+    api_key = request.POST.get('api_key')
+    sensor_name = request.POST.get('sensor_name')
+    sensor_description = request.POST.get('sensor_description')
+    sensor = Sensor.objects.get(id=sensor_id)
+    sensor.Name = sensor_name
+    sensor.Description = sensor_description
+    sensor.Api_key = api_key
+    sensor.save()
+    return HttpResponse(status=200)
+
+
+def delete_sensor(request):
+    sensor_id = request.POST.get('sensor_id')
+    sensor = Sensor.objects.get(id=sensor_id)
+    sensor.delete()
     return HttpResponse(status=200)

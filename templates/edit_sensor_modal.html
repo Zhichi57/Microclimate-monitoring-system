@@ -1,0 +1,38 @@
+<div class="modal fade" id="editSensorModal_{{ sensor.id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Изменить датчик</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3" id="edit_sensor_form_{{ sensor.id }}">
+                    <input hidden name="sensor_id" value="{{ sensor.id }}">
+                    <div class="col-12">
+                        <label for="inputSensorApi" class="form-label">Ключ API</label>
+                        <input type="text" value="{{ sensor.Api_key }}" name="api_key" class="form-control"
+                               id="inputSensorApi">
+                    </div>
+                    <div class="col-12">
+                        <label for="inputSensorName" class="form-label">Название датчика</label>
+                        <input type="text" value="{{ sensor.Name }}" name="sensor_name" class="form-control"
+                               id="inputSensorName">
+                    </div>
+                    <div class="col-12">
+                        <label for="inputSensorDescription" class="form-label">Описание датчика</label>
+                        <input type="text" value="{{ sensor.Description }}" name="sensor_description"
+                               class="form-control" id="inputSensorDescription">
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" id="edit_sensor_button" onclick="edit_sensor('{{ sensor.id }}')"
+                        data-bs-dismiss="modal" class="btn btn-primary">Сохранить
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

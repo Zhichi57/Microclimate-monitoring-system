@@ -36,3 +36,10 @@ class UserManual(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     Manual_id = models.OneToOneField(Manual, on_delete=models.CASCADE)
 
+
+class Sensor(models.Model):
+    id = models.AutoField(primary_key=True)
+    Api_key = models.TextField(blank=False)
+    Name = models.TextField(blank=False)
+    Description = models.TextField(blank=False)
+    User = models.ForeignKey(User, on_delete=models.CASCADE)

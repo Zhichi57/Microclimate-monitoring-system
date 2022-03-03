@@ -6,21 +6,26 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form class="row g-3">
+                <form class="row g-3" id="add_sensor_form">
                     <div class="col-12">
                         <label for="inputSensorApi" class="form-label">Ключ API</label>
-                        <input type="text" class="form-control" id="inputSensorApi">
+                        <input type="text" name="api_key" class="form-control" id="inputSensorApi">
                     </div>
                     <div class="col-12">
                         <label for="inputSensorName" class="form-label">Название датчика</label>
-                        <input type="text" class="form-control" id="inputSensorName">
+                        <input type="text" name="sensor_name" class="form-control" id="inputSensorName">
+                    </div>
+                    <div class="col-12">
+                        <label for="inputSensorDescription" class="form-label">Описание датчика</label>
+                        <input type="text" name="sensor_description" class="form-control" id="inputSensorDescription">
                     </div>
 
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                <button type="button" class="btn btn-primary">Добавить</button>
+                <button type="button" id="add_sensor_button" data-bs-dismiss="modal" class="btn btn-primary">Добавить
+                </button>
             </div>
         </div>
     </div>

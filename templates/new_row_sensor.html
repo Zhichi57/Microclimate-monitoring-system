@@ -1,0 +1,14 @@
+<tr id="row_sensor_{{ sensor.id }}">
+    <th style="font-weight: normal;" id="row_sensor_name_{{ sensor.id }}">{{ sensor.Name }}</th>
+    <td id="row_sensor_api_key_{{ sensor.id }}">{{ sensor.Api_key }}</td>
+    <td id="row_sensor_description_{{ sensor.id }}">{{ sensor.Description }}</td>
+    <td>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                data-bs-target="#editSensorModal_{{ sensor.id }}"><i class="bi bi-pencil"></i></button>
+        {% include 'edit_sensor_modal.html' %}
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                data-bs-target="#deleteSensorModal_{{ sensor.id }}"><i class="bi bi-x-circle"></i>
+        </button>
+        {% include 'delete_sensor_modal.html' %}
+    </td>
+</tr>
