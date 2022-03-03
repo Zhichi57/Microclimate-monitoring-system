@@ -1,1 +1,24 @@
-aaaa
+<div class="container-fluid">
+    <div class="row">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Название датчика</th>
+                <th scope="col">Температура</th>
+                <th scope="col">Влажность</th>
+                <th scope="col">Дата и время</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for data in indications %}
+                <tr>
+                    <td>{{ data.Sensor.Name }}</td>
+                    <td>{{ data.Temperature }}</td>
+                    <td>{{ data.Humidity }}</td>
+                    <td>{{ data.Receiving_data_time }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

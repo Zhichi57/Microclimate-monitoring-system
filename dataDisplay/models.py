@@ -43,3 +43,11 @@ class Sensor(models.Model):
     Name = models.TextField(blank=False)
     Description = models.TextField(blank=False)
     User = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Indications(models.Model):
+    id = models.AutoField(primary_key=True)
+    Receiving_data_time = models.IntegerField(blank=False)
+    Humidity = models.FloatField(blank=False)
+    Temperature = models.FloatField(blank=False)
+    Sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE)

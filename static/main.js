@@ -61,3 +61,21 @@ function delete_sensor(id) {
     });
 
 }
+
+
+$('#select_date_button').on('click', function () {
+    let start_date = $('#start_date').val();
+    let end_date = $('#end_date').val();
+    if ((start_date !== '') && (end_date !== '')) {
+         window.location.href = "/?start_date=" + start_date + '&end_date=' + end_date;
+    }
+
+})
+
+$( document ).ready(function() {
+    let searchParams = new URLSearchParams(window.location.search)
+    let start_date = searchParams.get('start_date')
+    let end_date = searchParams.get('end_date')
+    $('#start_date').val(start_date);
+    $('#end_date').val(end_date);
+});

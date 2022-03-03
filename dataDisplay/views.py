@@ -1,3 +1,4 @@
+import datetime
 import json
 
 from django.contrib.auth.models import User
@@ -7,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.templatetags.static import static
 from django.contrib.auth.decorators import login_required
 
-from .models import Map, Manual, UserManual, Sensor
+from .models import Map, Manual, UserManual, Sensor, Indications
 
 import uuid
 
@@ -40,7 +41,28 @@ def index(request):
     user = User.objects.get(pk=request.user.id)
     manual = Manual.objects.all()
     sensors = Sensor.objects.filter(User=user)
-    return render(request, 'index.html', {"manual": manual, 'sensors': sensors})
+
+    sensors_id = []
+    for sensor in sensors:
+        sensors_id.append(sensor.id)
+
+    if request.GET.get('start_date') is not None:
+        start_date = request.GET.get('start_date') + ' 00:00'
+        end_date = request.GET.get('end_date') + ' 23:59'
+        format_date = '%Y-%m-%d %H:%M'
+        start_date = int(datetime.datetime.strptime(start_date, format_date).timestamp())
+        end_date = int(datetime.datetime.strptime(end_date, format_date).timestamp())
+
+        indications = Indications.objects.filter(Sensor_id__in=sensors_id, Receiving_data_time__gte=start_date,
+                                                 Receiving_data_time__lte=end_date)
+    else:
+        indications = Indications.objects.filter(Sensor_id__in=sensors_id)
+
+    for sensor in indications:
+        date = datetime.datetime.fromtimestamp(float(sensor.Receiving_data_time))
+        date = date.strftime('%H:%M:%S %d.%m.%Y')
+        sensor.Receiving_data_time = date
+    return render(request, 'index.html', {"manual": manual, 'sensors': sensors, 'indications': indications})
 
 
 def set_image(request):
