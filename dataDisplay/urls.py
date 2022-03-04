@@ -1,6 +1,6 @@
 from django.urls import path, include
 from dataDisplay.views import index, get_map_data, set_map_data, set_image, set_manual, add_sensor, edit_sensor, \
-    delete_sensor
+    delete_sensor, pdf_report
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path(r'add_sensor', add_sensor, name='add_sensor'),
     path(r'edit_sensor', edit_sensor, name='edit_sensor'),
     path(r'delete_sensor', delete_sensor, name='delete_sensor'),
+    path(r'pdf_report', pdf_report, name='pdf_report'),
 ]
 
 if settings.DEBUG:

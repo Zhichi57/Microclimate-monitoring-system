@@ -79,3 +79,14 @@ $( document ).ready(function() {
     $('#start_date').val(start_date);
     $('#end_date').val(end_date);
 });
+
+$('#get_pdf_report').on('click', function () {
+    let start_date = $('#start_date').val();
+    let end_date = $('#end_date').val();
+    if ((start_date !== '') && (end_date !== '')) {
+         window.location.href = "pdf_report?start_date=" + start_date + '&end_date=' + end_date;
+    }else {
+        window.location.href = "pdf_report"
+    }
+
+})
