@@ -2,18 +2,30 @@
 {% load crispy_forms_tags %}
 
 {% block main %}
-<div class="card">
-<div class="card-body">
-<h4 class="card-title">Log in to your account</h4>
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title" style="text-align: center;">Авторизуйтесь в свой профиль</h4>
 
-<form method="post">
-{% csrf_token %}
-<input type="hidden" name="next" value="{{ next }}">
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
 
-{{ form|crispy }}
 
-<button type="submit" class="btn btn-primary btn-block">Log in</button>
-</form>
-</div>
-</div>
+                <div id="div_id_username" class="form-group"><label for="id_username" class=" requiredField">
+                    Имя пользователя<span class="asteriskField">*</span> </label>
+                    <div><input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username"
+                                maxlength="150" class="textinput textInput form-control" required="" id="id_username">
+                    </div>
+                </div>
+
+                <div id="div_id_password" class="form-group"><label for="id_password" class=" requiredField">
+                    Пароль<span class="asteriskField">*</span> </label>
+                    <div><input type="password" name="password" autocomplete="current-password"
+                                class="textinput textInput form-control" required="" id="id_password"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Войти</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
