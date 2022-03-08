@@ -1,3 +1,4 @@
+import csv
 import datetime
 import json
 
@@ -200,5 +201,54 @@ def pdf_report(request):
     pdf.output('simple_table.pdf')
     try:
         return FileResponse(open('simple_table.pdf', 'rb'), content_type='application/pdf')
+    except FileNotFoundError:
+        raise Http404()
+
+
+def csv_report(request):
+    user = User.objects.get(pk=request.user.id)
+    sensors = Sensor.objects.filter(User=user)
+
+    sensors_id = []
+    for sensor in sensors:
+        sensors_id.append(sensor.id)
+
+    if request.GET.get('start_date') is not None:
+        start_date = request.GET.get('start_date') + ' 00:00'
+        end_date = request.GET.get('end_date') + ' 23:59'
+        format_date = '%Y-%m-%d %H:%M'
+        start_date = int(datetime.datetime.strptime(start_date, format_date).timestamp())
+        end_date = int(datetime.datetime.strptime(end_date, format_date).timestamp())
+
+        indications = Indications.objects.filter(Sensor_id__in=sensors_id, Receiving_data_time__gte=start_date,
+                                                 Receiving_data_time__lte=end_date)
+    else:
+        indications = Indications.objects.filter(Sensor_id__in=sensors_id)
+
+    data = []
+    for sensor in indications.values('Temperature', 'Humidity', 'Receiving_data_time'):
+        date = datetime.datetime.fromtimestamp(float(sensor['Receiving_data_time']))
+        date = date.strftime('%H:%M:%S %d.%m.%Y')
+        sensor['Receiving_data_time'] = date
+        data.append(list(sensor.values()))
+
+    new_data = []
+    for el in data:
+        el = list(map(str, el))
+        new_data.append(el)
+
+    with open('csv_report.csv', 'w', newline='', encoding='cp1251') as csv_file:
+        writer = csv.writer(csv_file, dialect='excel-tab')
+        if request.GET.get('start_date') is not None:
+            format_date = '%Y-%m-%d'
+            start_date = datetime.datetime.strptime(request.GET.get('start_date'), format_date).strftime('%d.%m.%Y')
+            end_date = datetime.datetime.strptime(request.GET.get('end_date'), format_date).strftime('%d.%m.%Y')
+            writer.writerow(['Отчет за {} - {}'.format(start_date, end_date)])
+        writer.writerow(['Температура', 'Влажность', 'Дата и время'])
+        for row in new_data:
+            writer.writerow(row)
+
+    try:
+        return FileResponse(open('csv_report.csv', 'rb'), content_type='text/csv')
     except FileNotFoundError:
         raise Http404()
