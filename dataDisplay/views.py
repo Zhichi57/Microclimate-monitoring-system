@@ -58,9 +58,9 @@ def index(request):
         end_date = int(datetime.datetime.strptime(end_date, format_date).timestamp())
 
         indications = Indications.objects.filter(Sensor_id__in=sensors_id, Receiving_data_time__gte=start_date,
-                                                 Receiving_data_time__lte=end_date)
+                                                 Receiving_data_time__lte=end_date).order_by('-Receiving_data_time')
     else:
-        indications = Indications.objects.filter(Sensor_id__in=sensors_id)
+        indications = Indications.objects.filter(Sensor_id__in=sensors_id).order_by('-Receiving_data_time')
 
     for sensor in indications:
         date = datetime.datetime.fromtimestamp(float(sensor.Receiving_data_time))
