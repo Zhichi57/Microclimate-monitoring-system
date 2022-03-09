@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect
 from django.templatetags.static import static
 from django.contrib.auth.decorators import login_required
 
-from .models import Map, Manual, UserManual, Sensor, Indications
+from .models import Map, Manual, UserManual, Sensor, Indications, IndicationLimits
 
 import uuid
 
@@ -44,7 +44,8 @@ def index(request):
     user = User.objects.get(pk=request.user.id)
     manual = Manual.objects.all()
     sensors = Sensor.objects.filter(User=user)
-
+    indication_limits_id = manual.get(id=UserManual.objects.get(user=user).Manual_id.id).IndicationLimits_id.id
+    limits = IndicationLimits.objects.get(id=indication_limits_id)
     sensors_id = []
     for sensor in sensors:
         sensors_id.append(sensor.id)
@@ -65,7 +66,8 @@ def index(request):
         date = datetime.datetime.fromtimestamp(float(sensor.Receiving_data_time))
         date = date.strftime('%H:%M:%S %d.%m.%Y')
         sensor.Receiving_data_time = date
-    return render(request, 'index.html', {"manual": manual, 'sensors': sensors, 'indications': indications})
+    return render(request, 'index.html', {"manual": manual, 'sensors': sensors, 'indications': indications,
+                                          'limits': limits})
 
 
 def set_image(request):

@@ -15,8 +15,8 @@
             {% for data in indications %}
                 <tr>
                     <td>{{ data.Sensor.Name }}</td>
-                    <td>{{ data.Temperature }}</td>
-                    <td>{{ data.Humidity }}</td>
+                    <td {% if data.Temperature > limits.UpperTemperatureLimit or data.Temperature < limits.LowerTemperatureLimit %}class="table-danger"{% endif %}>{{ data.Temperature }}</td>
+                    <td {% if data.Humidity > limits.UpperHumidityLimit or data.Humidity < limits.LowerHumidityLimit %}class="table-danger"{% endif %}>{{ data.Humidity }}</td>
                     <td>{{ data.Receiving_data_time }}</td>
                 </tr>
             {% endfor %}
