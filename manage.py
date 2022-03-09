@@ -18,4 +18,6 @@ def main():
 
 
 if __name__ == '__main__':
+    # os.system('celery -A vkr beat')
+    # os.system('celery -A vkr worker -l info -P eventlet')
     main()
