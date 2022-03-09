@@ -239,11 +239,13 @@ def csv_report(request):
 
     with open('csv_report.csv', 'w', newline='', encoding='cp1251') as csv_file:
         writer = csv.writer(csv_file, dialect='excel-tab')
+        writer.writerow(['Отчет о микроклимате'])
+        writer.writerow([])
         if request.GET.get('start_date') is not None:
             format_date = '%Y-%m-%d'
             start_date = datetime.datetime.strptime(request.GET.get('start_date'), format_date).strftime('%d.%m.%Y')
             end_date = datetime.datetime.strptime(request.GET.get('end_date'), format_date).strftime('%d.%m.%Y')
-            writer.writerow(['Отчет за {} - {}'.format(start_date, end_date)])
+            writer.writerow(['За период {} - {}'.format(start_date, end_date)])
         writer.writerow(['Температура', 'Влажность', 'Дата и время'])
         for row in new_data:
             writer.writerow(row)
