@@ -88,9 +88,12 @@ def get_map_data(request):
     get_map = Map.objects.get(user=user)
     data = json.loads(get_map.map_data)
     list_zones = data['floors'][0]['zones']
-    # for zone in list_zones:
-    #    if zone['name'] == 'test1':
-    #        zone['name'] = '19.0'
+    for zone in list_zones:
+        if Indications.objects.filter(Sensor__Name=zone['name']).exists():
+            zone['name'] = str(Indications.objects.filter(Sensor__Name=zone['name']).last().Temperature) + '°C\n' + \
+                           str(Indications.objects.filter(Sensor__Name=zone['name']).last().Humidity) + '%'
+        else:
+            zone['name'] = 'NO DATA'
     return JsonResponse(data=data)
 
 
