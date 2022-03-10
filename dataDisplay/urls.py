@@ -17,7 +17,7 @@ urlpatterns = [
     path(r'pdf_report', pdf_report, name='pdf_report'),
     path(r'csv_report', csv_report, name='csv_report'),
     path('login/', views.LoginView.as_view(), name='login'),
-    path(r'^logout/$', views.LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    path('logout/', views.LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
