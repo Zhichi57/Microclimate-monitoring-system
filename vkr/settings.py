@@ -159,3 +159,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 mimetypes.add_type("text/javascript", ".js", True)
 
 CELERY_BROKER_URL = 'amqp://localhost'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ilya22121997@yandex.ru'
+EMAIL_HOST_PASSWORD = 'hxdtmysjevxpwniw'
+DEFAULT_FROM_EMAIL = 'ilya22121997@yandex.ru'
+EMAIL_USE_TLS = True
+EMAIL_SUBJECT = 'Оповещение системы мониторинга микроклимата'
