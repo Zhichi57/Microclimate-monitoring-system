@@ -243,7 +243,7 @@ def csv_report(request):
         new_data.append(el)
 
     with open('csv_report.csv', 'w', newline='', encoding='cp1251') as csv_file:
-        writer = csv.writer(csv_file, dialect='excel-tab')
+        writer = csv.writer(csv_file, delimiter=";", lineterminator="\r")
         writer.writerow(['Отчет о микроклимате'])
         writer.writerow([])
         if request.GET.get('start_date') is not None:
