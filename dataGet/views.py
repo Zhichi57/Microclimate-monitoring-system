@@ -56,7 +56,7 @@ def set_sensor_info(request):
                 date = datetime.datetime.fromtimestamp(float(now_date))
                 date = date.strftime('%H:%M:%S %d.%m.%Y')
                 send_email(danger_temp=danger_temp, danger_humidity=danger_humidity,
-                           temperature=temp, humidity=humidity, time=date)
+                           temperature=temp, humidity=humidity, time=date, email_address=user.email)
 
             indication = Indications(Sensor_id=get_sensor.id)
             indication.Temperature = temp

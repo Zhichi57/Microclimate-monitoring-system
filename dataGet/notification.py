@@ -3,7 +3,7 @@ from django.core.mail import BadHeaderError, send_mail, get_connection
 from vkr import settings
 
 
-def send_email(danger_temp, danger_humidity, temperature, humidity, time):
+def send_email(danger_temp, danger_humidity, temperature, humidity, time, email_address):
     text_mail = ''
     if danger_temp:
         text_mail += 'Неправильная температура:\n{}\n'.format(temperature)
@@ -22,6 +22,6 @@ def send_email(danger_temp, danger_humidity, temperature, humidity, time):
         settings.EMAIL_SUBJECT,
         text_mail,
         settings.DEFAULT_FROM_EMAIL,
-        ['i.alekhin57@mail.ru'],
+        [email_address],
         connection=connection,
     )
