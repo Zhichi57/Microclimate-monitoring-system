@@ -44,8 +44,11 @@ def index(request):
     user = User.objects.get(pk=request.user.id)
     manual = Manual.objects.all()
     sensors = Sensor.objects.filter(User=user)
-    indication_limits_id = manual.get(id=UserManual.objects.get(user=user).Manual_id.id).IndicationLimits_id.id
-    limits = IndicationLimits.objects.get(id=indication_limits_id)
+    try:
+        indication_limits_id = manual.get(id=UserManual.objects.get(user=user).Manual_id.id).IndicationLimits_id.id
+        limits = IndicationLimits.objects.get(id=indication_limits_id)
+    except Exception:
+        limits = None
     sensors_id = []
     for sensor in sensors:
         sensors_id.append(sensor.id)
@@ -163,9 +166,9 @@ def pdf_report(request):
         end_date = int(datetime.datetime.strptime(end_date, format_date).timestamp())
 
         indications = Indications.objects.filter(Sensor_id__in=sensors_id, Receiving_data_time__gte=start_date,
-                                                 Receiving_data_time__lte=end_date)
+                                                 Receiving_data_time__lte=end_date).order_by('-Receiving_data_time')
     else:
-        indications = Indications.objects.filter(Sensor_id__in=sensors_id)
+        indications = Indications.objects.filter(Sensor_id__in=sensors_id).order_by('-Receiving_data_time')
 
     data = []
     for sensor in indications.values('Temperature', 'Humidity', 'Receiving_data_time'):
@@ -226,9 +229,9 @@ def csv_report(request):
         end_date = int(datetime.datetime.strptime(end_date, format_date).timestamp())
 
         indications = Indications.objects.filter(Sensor_id__in=sensors_id, Receiving_data_time__gte=start_date,
-                                                 Receiving_data_time__lte=end_date)
+                                                 Receiving_data_time__lte=end_date).order_by('-Receiving_data_time')
     else:
-        indications = Indications.objects.filter(Sensor_id__in=sensors_id)
+        indications = Indications.objects.filter(Sensor_id__in=sensors_id).order_by('-Receiving_data_time')
 
     data = []
     for sensor in indications.values('Temperature', 'Humidity', 'Receiving_data_time'):
