@@ -1,6 +1,6 @@
 from django.urls import path, include
 from dataDisplay.views import index, get_map_data, set_map_data, set_image, set_manual, add_sensor, edit_sensor, \
-    delete_sensor, pdf_report, csv_report
+    delete_sensor, pdf_report, csv_report, SignUp
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views
@@ -19,6 +19,7 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.LogoutView.as_view(), {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('signup/', SignUp.as_view(), name="signup"),
 ]
 
 if settings.DEBUG:

@@ -10,10 +10,54 @@ from django.http import HttpResponse, JsonResponse, FileResponse, Http404
 from django.shortcuts import render, redirect
 from django.templatetags.static import static
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm, UsernameField
+from django.views.generic.edit import CreateView
+from django import forms
 
 from .models import Map, Manual, UserManual, Sensor, Indications, IndicationLimits
 
 import uuid
+
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ('username', 'password1', 'password2')
+
+    username = UsernameField(
+        label="Имя пользователя",
+        widget=forms.TextInput(attrs={"autofocus": True}),
+        error_messages={
+            'unique': "Пользователь с таким именем уже существует",
+        },
+    )
+
+    email = forms.EmailField(
+        label="Email",
+        max_length=254,
+        widget=forms.EmailInput(attrs={"autocomplete": "email"}),
+        error_messages={
+            'invalid': "Неправильный адрес электронной почты",
+        },
+    )
+
+    password1 = forms.CharField(
+        label='Пароль',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+    password2 = forms.CharField(
+        label='Повторите пароль',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        error_messages={
+            'invalid': "Два пароля не совпадают",
+        }
+    )
+
+
+class SignUp(CreateView):
+    form_class = CustomUserCreationForm
+    success_url = '/'
+    template_name = "registration/register.html"
 
 
 @login_required
