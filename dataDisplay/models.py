@@ -51,3 +51,8 @@ class Indications(models.Model):
     Humidity = models.FloatField(blank=False)
     Temperature = models.FloatField(blank=False)
     Sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE)
+
+
+class DeviationsIndications(models.Model):
+    id = models.AutoField(primary_key=True)
+    Indications_id = models.ForeignKey(Indications, on_delete=models.CASCADE)

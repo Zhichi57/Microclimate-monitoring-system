@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 from vkr.settings import LOG_LEVEL
-from dataDisplay.models import Map, Manual, UserManual, Sensor, Indications, IndicationLimits
+from dataDisplay.models import UserManual, Sensor, Indications, DeviationsIndications
 from django.contrib.auth.models import User
 
 from .notification import send_email
@@ -52,17 +52,19 @@ def set_sensor_info(request):
             if temp > upper_temperature or lower_temperature > temp:
                 danger_temp = True
 
-            if danger_humidity or danger_temp:
-                date = datetime.datetime.fromtimestamp(float(now_date))
-                date = date.strftime('%H:%M:%S %d.%m.%Y')
-                send_email(danger_temp=danger_temp, danger_humidity=danger_humidity,
-                           temperature=temp, humidity=humidity, time=date, email_address=user.email)
-
             indication = Indications(Sensor_id=get_sensor.id)
             indication.Temperature = temp
             indication.Humidity = humidity
             indication.Receiving_data_time = now_date
             indication.save()
+
+            if danger_humidity or danger_temp:
+                deviation = DeviationsIndications(Indications_id=indication)
+                deviation.save()
+                date = datetime.datetime.fromtimestamp(float(now_date))
+                date = date.strftime('%H:%M:%S %d.%m.%Y')
+                send_email(danger_temp=danger_temp, danger_humidity=danger_humidity,
+                           temperature=temp, humidity=humidity, time=date, email_address=user.email)
             return Response(data='ok', status=status.HTTP_202_ACCEPTED)
         except Sensor.DoesNotExist:
             return Response(data='no sensor', status=status.HTTP_202_ACCEPTED)
