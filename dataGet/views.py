@@ -24,10 +24,9 @@ def set_sensor_info(request):
     if request.method == 'POST':
         logger.debug(request.POST)
         if 'key' not in request.POST or 'temp' not in request.POST or 'humidity' not in request.POST:
+            if request.POST.get('temp') == 'nan' or request.POST.get('humidity') == 'nan':
+                return Response(status=status.HTTP_400_BAD_REQUEST)
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        if request.POST.get('temp') == 'nan' or request.POST.get('humidity') == 'nan':
-            return Response(status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
         key = request.POST.get('key')
         temp = float(request.POST.get('temp'))
