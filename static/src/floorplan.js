@@ -308,6 +308,7 @@ d3.floorplan = function () {
                 action: function (elm, d, i) {
                     console.log('Change zone name');
                     zone.name = prompt("Введите имя датчика", "");
+                    zone.sensor_name = zone.name;
                     d3.select("." + this.classList.item(1) + '-text').text(zone.name);
                 }
             },

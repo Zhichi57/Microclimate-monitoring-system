@@ -135,11 +135,11 @@ def get_map_data(request):
     data = json.loads(get_map.map_data)
     list_zones = data['floors'][0]['zones']
     for zone in list_zones:
-        if Indications.objects.filter(Sensor__Name=zone['name']).exists():
-            zone['name'] = str(Indications.objects.filter(Sensor__Name=zone['name']).order_by('-Receiving_data_time')
-                               .first().Temperature) + '°C\n' + \
-                           str(Indications.objects.filter(Sensor__Name=zone['name']).order_by('-Receiving_data_time')
-                               .first().Humidity) + '%'
+        if Indications.objects.filter(Sensor__Name=zone['sensor_name']).exists():
+            zone['name'] = str(Indications.objects.filter(Sensor__Name=zone['sensor_name'])
+                               .order_by('-Receiving_data_time').first().Temperature) + '°C\n' + \
+                           str(Indications.objects.filter(Sensor__Name=zone['sensor_name'])
+                               .order_by('-Receiving_data_time').first().Humidity) + '%'
         else:
             zone['name'] = 'NO DATA'
     return JsonResponse(data=data)
@@ -187,6 +187,8 @@ def edit_sensor(request):
 
 
 def get_indication_status(request):
+    if request.GET.get('indications') == 'NO DATA':
+        return JsonResponse({'status': 'green'})
     indications = request.GET.get('indications').split('\n')
     temp = indications[0].replace('°C', '')
     hum = indications[1].replace('%', '')
