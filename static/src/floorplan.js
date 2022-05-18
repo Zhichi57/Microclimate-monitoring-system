@@ -268,16 +268,32 @@ d3.floorplan = function () {
             }
 
             function addLabel(text, centroid, labelClassName) {
-                var svgText = gPoly.append("text");
-                svgText.attr("x", centroid[0])
-                    .attr("y", centroid[1])
-                    .attr('font-size', 14)
-                    .attr('font-weight', 400)
-                    .attr('font-family', 'sans-serif')
-                    .attr('text-anchor', 'middle')
-                    .style('fill', 'darkOrange')
-                    .classed(labelClassName, true);
-                svgText.text(text);
+                let get_status;
+                $.get("get_indication_status", {indications: text})
+                    .done(function (data) {
+                        get_status = data.status;
+                        let color = '';
+                        let text_id = '';
+                        if (get_status === 'red') {
+                            color = 'red';
+                            text_id = 'blink';
+                        } else {
+                            color = 'darkOrange';
+                            text_id = '';
+                        }
+                        console.log(get_status);
+                        var svgText = gPoly.append("text");
+                        svgText.attr("x", centroid[0])
+                            .attr("y", centroid[1])
+                            .attr('font-size', 14)
+                            .attr('font-weight', 400)
+                            .attr('id', text_id)
+                            .attr('font-family', 'sans-serif')
+                            .attr('text-anchor', 'middle')
+                            .style('fill', color) // смена цвета
+                            .classed(labelClassName, true);
+                        svgText.text(text);
+                    });
             }
 
         });

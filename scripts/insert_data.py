@@ -11,7 +11,7 @@ march_3 = 1646321607
 
 for i in range(100):
     random_date = random.randint(march_3, now_date)
-    rows.append((random.randint(30, 80), random.randint(15, 30), 7, str(random_date)))
+    rows.append((random.randint(30, 80), random.randint(15, 30), 11, str(random_date)))
 
 for row in rows:
     cursor.execute(

@@ -93,9 +93,6 @@ def index(request):
         limits = IndicationLimits.objects.get(id=indication_limits_id)
     except Exception:
         limits = None
-    sensors_id = []
-    for sensor in sensors:
-        sensors_id.append(sensor.id)
 
     if request.GET.get('start_date') is not None:
         start_date = request.GET.get('start_date') + ' 00:00'
@@ -104,10 +101,10 @@ def index(request):
         start_date = int(datetime.datetime.strptime(start_date, format_date).timestamp())
         end_date = int(datetime.datetime.strptime(end_date, format_date).timestamp())
 
-        indications = Indications.objects.filter(Sensor_id__in=sensors_id, Receiving_data_time__gte=start_date,
+        indications = Indications.objects.filter(Sensor_id__in=sensors, Receiving_data_time__gte=start_date,
                                                  Receiving_data_time__lte=end_date).order_by('-Receiving_data_time')
     else:
-        indications = Indications.objects.filter(Sensor_id__in=sensors_id).order_by('-Receiving_data_time')
+        indications = Indications.objects.filter(Sensor_id__in=sensors).order_by('-Receiving_data_time')
 
     for sensor in indications:
         date = datetime.datetime.fromtimestamp(float(sensor.Receiving_data_time))
@@ -139,8 +136,10 @@ def get_map_data(request):
     list_zones = data['floors'][0]['zones']
     for zone in list_zones:
         if Indications.objects.filter(Sensor__Name=zone['name']).exists():
-            zone['name'] = str(Indications.objects.filter(Sensor__Name=zone['name']).last().Temperature) + '°C\n' + \
-                           str(Indications.objects.filter(Sensor__Name=zone['name']).last().Humidity) + '%'
+            zone['name'] = str(Indications.objects.filter(Sensor__Name=zone['name']).order_by('-Receiving_data_time')
+                               .first().Temperature) + '°C\n' + \
+                           str(Indications.objects.filter(Sensor__Name=zone['name']).order_by('-Receiving_data_time')
+                               .first().Humidity) + '%'
         else:
             zone['name'] = 'NO DATA'
     return JsonResponse(data=data)
@@ -187,6 +186,40 @@ def edit_sensor(request):
     return HttpResponse(status=200)
 
 
+def get_indication_status(request):
+    indications = request.GET.get('indications').split('\n')
+    temp = indications[0].replace('°C', '')
+    hum = indications[1].replace('%', '')
+    temp = float(temp)
+    hum = float(hum)
+
+    user = User.objects.get(pk=request.user.id)
+    manual = UserManual.objects.get(user=user)
+    danger_temp = False
+    danger_humidity = False
+
+    lower_humidity = float(manual.Manual_id.IndicationLimits_id.LowerHumidityLimit)
+    upper_humidity = float(manual.Manual_id.IndicationLimits_id.UpperHumidityLimit)
+    upper_temperature = float(manual.Manual_id.IndicationLimits_id.UpperTemperatureLimit)
+    lower_temperature = float(manual.Manual_id.IndicationLimits_id.LowerTemperatureLimit)
+
+    if hum > upper_humidity or lower_humidity > hum:
+        danger_humidity = True
+
+    if temp > upper_temperature or lower_temperature > temp:
+        danger_temp = True
+
+    if danger_humidity or danger_temp:
+        result = {
+            'status': 'red'
+        }
+    else:
+        result = {
+            'status': 'green'
+        }
+    return JsonResponse(result)
+
+
 def delete_sensor(request):
     sensor_id = request.POST.get('sensor_id')
     sensor = Sensor.objects.get(id=sensor_id)
@@ -198,10 +231,6 @@ def pdf_report(request):
     user = User.objects.get(pk=request.user.id)
     sensors = Sensor.objects.filter(User=user)
 
-    sensors_id = []
-    for sensor in sensors:
-        sensors_id.append(sensor.id)
-
     if request.GET.get('start_date') is not None:
         start_date = request.GET.get('start_date') + ' 00:00'
         end_date = request.GET.get('end_date') + ' 23:59'
@@ -209,10 +238,10 @@ def pdf_report(request):
         start_date = int(datetime.datetime.strptime(start_date, format_date).timestamp())
         end_date = int(datetime.datetime.strptime(end_date, format_date).timestamp())
 
-        indications = Indications.objects.filter(Sensor_id__in=sensors_id, Receiving_data_time__gte=start_date,
+        indications = Indications.objects.filter(Sensor_id__in=sensors, Receiving_data_time__gte=start_date,
                                                  Receiving_data_time__lte=end_date).order_by('-Receiving_data_time')
     else:
-        indications = Indications.objects.filter(Sensor_id__in=sensors_id).order_by('-Receiving_data_time')
+        indications = Indications.objects.filter(Sensor_id__in=sensors).order_by('-Receiving_data_time')
 
     data = []
     for sensor in indications.values('Temperature', 'Humidity', 'Receiving_data_time'):
@@ -261,10 +290,6 @@ def csv_report(request):
     user = User.objects.get(pk=request.user.id)
     sensors = Sensor.objects.filter(User=user)
 
-    sensors_id = []
-    for sensor in sensors:
-        sensors_id.append(sensor.id)
-
     if request.GET.get('start_date') is not None:
         start_date = request.GET.get('start_date') + ' 00:00'
         end_date = request.GET.get('end_date') + ' 23:59'
@@ -272,10 +297,10 @@ def csv_report(request):
         start_date = int(datetime.datetime.strptime(start_date, format_date).timestamp())
         end_date = int(datetime.datetime.strptime(end_date, format_date).timestamp())
 
-        indications = Indications.objects.filter(Sensor_id__in=sensors_id, Receiving_data_time__gte=start_date,
+        indications = Indications.objects.filter(Sensor_id__in=sensors, Receiving_data_time__gte=start_date,
                                                  Receiving_data_time__lte=end_date).order_by('-Receiving_data_time')
     else:
-        indications = Indications.objects.filter(Sensor_id__in=sensors_id).order_by('-Receiving_data_time')
+        indications = Indications.objects.filter(Sensor_id__in=sensors).order_by('-Receiving_data_time')
 
     data = []
     for sensor in indications.values('Temperature', 'Humidity', 'Receiving_data_time'):
