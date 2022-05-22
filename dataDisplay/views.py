@@ -342,3 +342,33 @@ def update_values(request):
         return JsonResponse({'status': 'warning', 'row_id': last_row_id})
     else:
         return JsonResponse({'status': 'no data'})
+
+
+def get_chart_data(request):
+    user = User.objects.get(pk=request.user.id)
+    sensors = Sensor.objects.filter(User=user)
+    if request.POST.get('start_date') != '':
+        start_date = request.POST.get('start_date') + ' 00:00'
+        end_date = request.POST.get('end_date') + ' 23:59'
+        format_date = '%Y-%m-%d %H:%M'
+        start_date = int(datetime.datetime.strptime(start_date, format_date).timestamp())
+        end_date = int(datetime.datetime.strptime(end_date, format_date).timestamp())
+
+        indications = Indications.objects.filter(Sensor_id__in=sensors, Receiving_data_time__gte=start_date,
+                                                 Receiving_data_time__lte=end_date).order_by('-Receiving_data_time')
+    else:
+        indications = Indications.objects.filter(Sensor_id__in=sensors).order_by('-Receiving_data_time')
+    data = {}
+    labels = []
+    humidity = []
+    temp = []
+    for sensor in indications.values('Temperature', 'Humidity', 'Receiving_data_time'):
+        date = datetime.datetime.fromtimestamp(float(sensor['Receiving_data_time']))
+        date = date.strftime('%H:%M:%S %d.%m.%Y')
+        labels.append(date)
+        humidity.append(sensor.get('Humidity'))
+        temp.append(sensor.get('Temperature'))
+    data['labels'] = labels
+    data['humidity'] = humidity
+    data['temp'] = temp
+    return JsonResponse(data)

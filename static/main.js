@@ -126,5 +126,54 @@ $(document).ready(function () {
             }
         });
 
-    }, 5000);
+    }, 60000);
+});
+
+
+$(document).ready(function () {
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    let searchParams = new URLSearchParams(window.location.search)
+    let start_date = searchParams.get('start_date')
+    let end_date = searchParams.get('end_date')
+
+    $.ajax({
+        url: 'get_chart_data',
+        method: 'post',
+        headers: {'X-CSRFToken': csrftoken},
+        data: {
+            start_date: start_date,
+            end_date: end_date
+        },
+        success: function (data) {
+            const ctx = $('#myChart');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Температура',
+                        data: data.temp,
+                        fill: false,
+                        borderColor: 'rgb(44,229,0)',
+                        tension: 0.1
+                    },
+                        {
+                            label: 'Влажность',
+                            data: data.humidity,
+                            fill: false,
+                            borderColor: 'rgb(252,0,0)',
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                }
+            });
+
+        }
+    });
+
 });

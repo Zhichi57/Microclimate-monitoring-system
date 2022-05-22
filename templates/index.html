@@ -18,6 +18,9 @@
     <link rel="stylesheet" href="{% static 'bootstrap-icons-1.8.1/bootstrap-icons.css' %}">
     <link rel="stylesheet" href="{% static 'main.css' %}">
 
+    <script src="{% static 'chart.js' %}"></script>
+    <script src="{% static 'chart.min.js' %}"></script>
+
     <title>ВКР</title>
 </head>
 <body>
@@ -49,8 +52,14 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pills-map-tab" data-bs-toggle="pill"
-                            data-bs-target="#pills-map" type="button" role="tab" aria-controls="pills-settings"
+                            data-bs-target="#pills-map" type="button" role="tab" aria-controls="pills-map"
                             aria-selected="false">Карта
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-charts-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-charts" type="button" role="tab" aria-controls="pills-charts"
+                            aria-selected="false">График
                     </button>
                 </li>
             </ul>
@@ -74,6 +83,10 @@
 
     <div class="tab-pane fade" id="pills-map" role="tabpanel" aria-labelledby="pills-map-tab">
         {% include 'map.html' %}
+    </div>
+
+    <div class="tab-pane fade" id="pills-charts" role="tabpanel" aria-labelledby="pills-charts-tab">
+        {% include 'charts.html' %}
     </div>
 
 </div>
