@@ -101,3 +101,30 @@ $('#get_csv_report').on('click', function () {
     }
 
 })
+global_row_id = null;
+$(document).ready(function () {
+    setInterval(function () {
+        let row_id;
+        if (global_row_id === null) {
+            row_id = $('#sensor_values_table tr:nth-child(1)')[1].id.replace('sensor_values_row_','');
+        } else {
+            row_id = global_row_id;
+        }
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        $.ajax({
+            url: 'update_values',
+            method: 'post',
+            headers: {'X-CSRFToken': csrftoken},
+            data: {
+                row_id: row_id,
+            },
+            success: function (data) {
+                if (data.status === 'warning') {
+                    $('#values_warning_modal').modal('show');
+                    global_row_id = data.row_id
+                }
+            }
+        });
+
+    }, 5000);
+});

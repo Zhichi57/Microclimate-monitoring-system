@@ -14,7 +14,7 @@ from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.views.generic.edit import CreateView
 from django import forms
 
-from .models import Map, Manual, UserManual, Sensor, Indications, IndicationLimits
+from .models import Map, Manual, UserManual, Sensor, Indications, IndicationLimits, DeviationsIndications
 
 import uuid
 
@@ -333,3 +333,12 @@ def csv_report(request):
         return FileResponse(open('csv_report.csv', 'rb'), content_type='text/csv')
     except FileNotFoundError:
         raise Http404()
+
+
+def update_values(request):
+    row_id = int(request.POST.get('row_id'))
+    last_row_id = Indications.objects.order_by('-Receiving_data_time').first().id
+    if last_row_id > row_id and DeviationsIndications.objects.filter(Indications_id=last_row_id).exists():
+        return JsonResponse({'status': 'warning', 'row_id': last_row_id})
+    else:
+        return JsonResponse({'status': 'no data'})
