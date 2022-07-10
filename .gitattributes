@@ -1,2 +1,2 @@
-static/ linguist-detectable=false
-templates/ linguist-detectable=false
+static/* linguist-detectable=false
+templates/* linguist-detectable=false
