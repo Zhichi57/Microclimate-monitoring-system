@@ -7,11 +7,11 @@ cursor = conn.cursor()
 
 rows = []
 now_date = int(datetime.datetime.now().timestamp())
-march_3 = 1646321607
+march_3 = 1653166800
 
 for i in range(100):
     random_date = random.randint(march_3, now_date)
-    rows.append((random.randint(30, 80), random.randint(15, 30), 11, str(random_date)))
+    rows.append((random.randint(30, 80), random.randint(15, 30), 12, str(random_date)))
 
 for row in rows:
     cursor.execute(
