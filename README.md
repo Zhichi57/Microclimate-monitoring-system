@@ -22,3 +22,8 @@
 | `key` | string | Ключ API
 | `temp` | float | Значение температуры                          
 | `humidity` | float | Значение влажности                          
+
+## Запуск системы с помощью Docker
+Для запуска системы с помощью Docker необходимо выполнить команду  
+`docker run -p 8000:8000 -t zhichi/microclimate-monitoring-system`
+
